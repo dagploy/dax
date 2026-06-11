@@ -1,0 +1,39 @@
+version: '3'
+
+tasks:
+  run:
+    desc: "Run VLLM Docker"
+    cmds:
+      - |
+        docker run --name vllm \
+          --volume /usr/local/nvidia/lib64:/usr/local/nvidia/lib64 \
+          --ulimit memlock=-1 --ulimit stack=67108864 \
+          ${extra_proxy} \
+          --device /dev/nvidia0:/dev/nvidia0 \
+          --device /dev/nvidia-uvm:/dev/nvidia-uvm \
+          --device /dev/nvidiactl:/dev/nvidiactl \
+          -v /usr/local/nvidia/bin:/usr/local/nvidia/bin \
+          --ipc=host \
+          --shm-size=10gb \
+          --env LD_LIBRARY_PATH=/usr/local/nvidia/lib64 \
+          --env NCCL_P2P_DISABLE=1 \
+          --env "VLLM_LOGGING_LEVEL=DEBUG" \
+          --env "VLLM_ATTENTION_BACKEND=TRITON_ATTN_VLLM_V1" \
+          --env HF_HUB_OFFLINE=1 \
+          --env TRANSFORMERS_OFFLINE=1 \
+          --env HF_DATASETS_OFFLINE=1 \
+          --env HF_HUB_DISABLE_PROGRESS_BARS=1 \
+          --env HF_HUB_DISABLE_TELEMETRY=1 \
+          --env TOKENIZERS_OFFLINE=1 \
+          -p ${port}:${port} \
+          -v /app/hf:/hf \
+          vllm/vllm-openai:nightly \
+          --port ${port} --served-model-name model --tensor-parallel-size ${gpu} --model /hf/${model_image} \
+          --host 0.0.0.0 --enforce-eager --gpu-memory-utilization=0.89 --dtype bfloat16
+  openwebui:
+    desc: "Run OpenWEBUI Docker"
+    cmds:
+      - |
+        docker run --name openwebui -p 8080:8080 ${extra_proxy} -e OPENAI_API_BASE_URL="http://$$LLM_IP:8080/v1" -e OPENAI_API_KEY="" \
+        -e ENABLE_OLLAMA_API=False -e WEBUI_AUTH=False -v ./:/app/backend/data \
+        ghcr.io/open-webui/open-webui:main

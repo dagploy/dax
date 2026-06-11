@@ -1,0 +1,37 @@
+# @package resources.vms
+gcp_vm_download:
+  zone: us-central1-a
+  machineType: e2-standard-8
+  osImage: projects/cos-cloud/global/images/family/cos-121-lts
+  imageSize: 85
+  bootSize: 85
+  provisioningModel: SPOT
+  maxWait: 1600
+
+gcp_vm_cpu:
+  zone: us-central1-a
+  machineType: e2-standard-8
+  osImage: projects/cos-cloud/global/images/family/cos-121-lts
+  imageSize: 80
+  bootSize: 30
+  provisioningModel: SPOT
+  maxWait: 1600
+
+gcp_vm_gpu:
+  zone: us-central1-a
+  machineType: g2-standard-4
+  gpu: 1
+  osImage: projects/cos-cloud/global/images/family/cos-121-lts
+  provisioningModel: SPOT
+  maxWait: 1600
+  imageSize: 80
+  bootSize: 80
+  alternativeZones:
+      - us-central1-f
+      - us-east1-b
+      - us-central1-b
+      - us-west1-b
+      - us-east1-c
+      - us-central1-c
+      - us-east1-d
+      - us-west1-c

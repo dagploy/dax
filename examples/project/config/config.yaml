@@ -1,0 +1,9 @@
+defaults:
+  - resources/vms: base
+#  - resources/k8s: base
+  # Pick environment (dev by default)
+  - env: ${oc.env:ENVIRONMENT,dev}
+  - _self_ # Ensures that settings in this file are also loaded
+
+# General application settings
+version: "1.0.0"

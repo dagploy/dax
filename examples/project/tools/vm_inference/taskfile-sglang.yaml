@@ -1,0 +1,41 @@
+version: '3'
+
+# Dont add proxy here since its cause bug
+tasks:
+  run:
+    desc: "Run SGLang Docker"
+    cmds:
+      - |
+        # Download tiktoken for GPT OSS
+        # You need to download tiktoken encodings for GPT OSS
+        # Put these two files into your GCS bucket and update the pat here
+        # 
+        # wget -O tiktoken_encodings/o200k_base.tiktoken "https://openaipublic.blob.core.windows.net/encodings/o200k_base.tiktoken"
+        # wget -O tiktoken_encodings/cl100k_base.tiktoken "https://openaipublic.blob.core.windows.net/encodings/cl100k_base.tiktoken"
+
+        cd /app && gsutil cp -r gs://YOUR_BUCKET/YOUR_TIKTOKEN_FOLDER .
+
+        docker run --runtime=nvidia --name sglang \
+          --volume /usr/local/nvidia/lib64:/usr/local/nvidia/lib64 \
+          --env LD_LIBRARY_PATH=/usr/local/nvidia/lib64 \
+          --shm-size=15g --ulimit memlock=-1 --ulimit stack=67108864 \
+          --env HF_HUB_OFFLINE=1 \
+          --env TRANSFORMERS_OFFLINE=1 \
+          --env HF_DATASETS_OFFLINE=1 \
+          --env HF_HUB_DISABLE_PROGRESS_BARS=1 \
+          --env HF_HUB_DISABLE_TELEMETRY=1 \
+          --env TOKENIZERS_OFFLINE=1 \
+          --env "TIKTOKEN_ENCODINGS_BASE=/tiktoken_encodings" \
+          --ipc=host \
+          -p 8000:8000 \
+          -v /app/gptoss:/tiktoken_encodings \
+          -v /app/hf:/hf \
+          ${docker} \
+           python3 -m sglang.launch_server --model-path /hf/${model_image} --served-model-name model --mem-fraction-static 0.92 --host 0.0.0.0 --port ${port} --tensor-parallel-size ${gpu} --dtype bfloat16 --max-total-tokens 32784 --reasoning-parser gpt-oss --tool-call-parser gpt-oss
+  openwebui:
+    desc: "Run OpenWEBUI Docker"
+    cmds:
+      - |
+        docker run --name openwebui -p 8080:8080 ${extra_proxy} -e OPENAI_API_BASE_URL="http://$$LLM_IP:8000/v1" -e OPENAI_API_KEY="" \
+        -e ENABLE_OLLAMA_API=False -e WEBUI_AUTH=False -v ./:/app/backend/data \
+        ghcr.io/open-webui/open-webui:main

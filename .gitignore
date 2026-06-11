@@ -1,0 +1,26 @@
+.openharness
+.env
+.venv
+.pre-commit-config.yaml
+coder
+*service-account.json
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+*.swp
+
+# Virtual environments
+.venv
+.pulumi
+
+*.pyc
+.idea
+.jupyter
+dist
+*.log
+pulumi_yaml/*

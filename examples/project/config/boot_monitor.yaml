@@ -1,0 +1,36 @@
+start_patterns:
+  - 'STARTUP_SCRIPT_START'
+
+fail_patterns:
+  - 'startup-script:\s*ERROR:.*'
+  - 'startup-script:\s*error:.*'
+  - 'ERROR:\s*\(gcloud\..*?\)\s*.*'
+  - 'Script\s+"startup-script"\s+failed with error:.*(?:exit status \d+)?'
+  - 'startup-script:\s*task:\s*Failed to run task ".+": exit status \d+'
+  - 'startup-script:.*RuntimeError:.*'
+  - 'startup-script:.*exit status [1-9]\d*'
+  - 'ERROR:\s*FAILED MOUNT DISK'
+
+finish_patterns:
+  - 'startup-script[:\s]*exit status 0'
+  - 'Finished running startup scripts\.'
+  - 'STARTUP_SCRIPT_COMPLETE'
+  - 'Successfully launched script runner'
+  - 'google-startup-scripts\.service:\s*Succeeded\.'
+  - 'google-startup-scripts\.service:\s*Finished'
+  - 'Application startup complete'
+
+ignore_patterns:
+  - 'error: failed to read file /root/var/lib/nvidia/.cache: open /root/var/lib/nvidia/.cache: no such file or directory'
+  - 'WorkerProc failed to start'
+  - 'Error retrieving safetensors: Repo id must be in the form'
+  - 'Failed to import from '
+  - 'ImportError:'
+  - 'Error getting v2 registry'
+  - 'pull after error'
+  - 'Error response from daemon:'
+  - 'Client.Timeout exceeded'
+  - 'Error 400:'
+  - 'Failed to run task "run"'
+  - "\\[Errno 101\\] Network is unreachable'\\)'\\: /batch/"
+  - 'openai_harmony.HarmonyError:'

@@ -1,0 +1,15 @@
+version: '3'
+
+tasks:
+  run:
+    desc: "Run Project on GPU VM"
+    cmds:
+      - |
+        set -e
+
+        echo "You can run anything here:..."
+        echo "eg: git clone, run services and more"
+
+        echo "📥 Downloading dax"
+        cd /app && git clone https://github.com/dagploy/dax
+        echo "[INFO] Project already exists. Pulling latest..."

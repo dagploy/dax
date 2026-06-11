@@ -1,0 +1,134 @@
+# config/env/dev.yaml
+# @package _
+name: dev
+project_name:
+gcp:project:
+gcp:serviceAccount:
+gcp:proxy: ""
+gcp:zone: us-central1-a
+gcp:network: "default"
+gcp:networkPublic: "default"
+gcp:urlMap: 
+gcp:maxWait: 800
+gcp:serviceAccountKey: "service-account-key"
+gcp:hfToken: "hf-token"
+gcp:osLogin: false
+gcp:dockerRun: dagploy/daxrun:latest
+gcp:errorDestroy: true
+
+services:
+  vm_cpu:
+    default: ${resources.vms.gcp_vm_cpu}
+    overrides: 
+      publicMode: true
+      provisioningModel: spot
+      machineType: e2-standard-4
+      openPorts: ["80", "443"]
+      bootSize: 100
+      alternativeZones:
+        - us-central1-a
+        - us-central1-b
+        - us-central1-c
+        - us-east1-a
+        - us-east1-b
+
+  vm_gpu:
+    default: ${resources.vms.gcp_vm_gpu}
+    overrides:
+      machineType: g2-standard-8
+      publicMode: true
+      gpu: 1
+      port: 80
+      bootSize: 200
+      provisioningModel: standard
+      openPorts: ["8080", "80", "443"]
+      alternativeZones:
+        - us-central1-a
+        - us-central1-b
+        - us-central1-c
+        - us-east1-b
+        - us-east1-c
+        - us-east1-d
+        - us-east4-a
+        - us-east4-c
+        - us-west1-a
+        - us-west1-b
+        - us-west4-a
+        - us-west4-c
+
+  vm_gpu_inference:
+    default: ${resources.vms.gcp_vm_gpu}
+    overrides:
+      machineType: g2-standard-8
+      gpu: 1
+      port: 8000
+      bootSize: 200
+      provisioningModel: standard
+      images:
+        - docker-lib-vllm
+      openPorts: ["8080", "8000"]
+      alternativeZones:
+        - us-central1-a
+        - us-central1-b
+        - us-central1-c
+        - us-east1-b
+        - us-east1-c
+        - us-east1-d
+        - us-east4-a
+        - us-east4-c
+        - us-west1-a
+        - us-west1-b
+        - us-west4-a
+        - us-west4-c
+
+  download_hf:
+    default: ${resources.vms.gcp_vm_download}
+    overrides:
+      family: "hf-images"
+      images: []
+      bootSize: 90
+      imageSize: 80
+      openPorts: []
+      osImage: projects/batch-custom-image/global/images/family/batch-debian-11-official
+      disableGlobalProjectWarning: "true"
+      branch: main
+      maxWait: 8000
+      provisioningModel: "STANDARD"
+
+  download_hf_multi:
+    default: ${resources.vms.gcp_vm_download}
+    overrides:
+      family: "hf-images"
+      images: []
+      bootSize: 120
+      imageSize: 80
+      openPorts: []
+      osImage: projects/batch-custom-image/global/images/family/batch-debian-11-official
+      disableGlobalProjectWarning: "true"
+      provisioningModel: "STANDARD"
+      maxWait: 8000
+
+  download_docker:
+    default: ${resources.vms.gcp_vm_download}
+    overrides:
+      family: "docker-tar"
+      provisioningModel: "STANDARD"
+      images: []
+      imageSize: 70
+      bootSize: 80
+      maxWait: 8000
+      osImage: projects/batch-custom-image/global/images/family/batch-debian-11-official
+      openPorts: []
+      logStartup: true
+
+  download_docker_image:
+    default: ${resources.vms.gcp_vm_download}
+    overrides:
+      family: "docker-lib"
+      maxWait: 8000
+      provisioningModel: "STANDARD"
+      images: []
+      bootSize: 90
+      imageSize: 70
+      openPorts: []
+      logStartup: true

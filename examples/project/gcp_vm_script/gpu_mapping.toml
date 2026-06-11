@@ -1,0 +1,42 @@
+# --- A100 ---
+"a2-highgpu-1g" = 1
+"a2-highgpu-2g" = 2
+"a2-highgpu-4g" = 4
+"a2-highgpu-8g" = 8
+"a2-megagpu-16g" = 16
+
+# --- A100-80GB ---
+"a2-ultragpu-1g" = 1
+"a2-ultragpu-2g" = 2
+"a2-ultragpu-4g" = 4
+"a2-ultragpu-8g" = 8
+
+# --- L4 (G2 machines) ---
+"g2-standard-4" = 1
+"g2-standard-8" = 1
+"g2-standard-12" = 1
+"g2-standard-16" = 1
+"g2-standard-32" = 1
+"g2-standard-24" = 2
+"g2-standard-48" = 4
+"g2-standard-96" = 8
+
+"g4-standard-48" = 1
+
+# --- H100 ---
+"a3-highgpu-1g" = 1
+"a3-highgpu-2g" = 2
+"a3-highgpu-4g" = 4
+"a3-highgpu-8g" = 8
+
+# --- H100-MEGA ---
+"a3-megagpu-8g" = 8
+
+# --- H200 ---
+"a3-ultragpu-8g" = 8
+
+# --- B200 ---
+"a4-highgpu-8g" = 8
+
+# RTX 6000
+
